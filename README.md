@@ -1,63 +1,360 @@
-# finban-mapping-service
+# Salary Management System
 
-Normalizes external accounting-system states (Lexware Office today) into
-finban's canonical domain model (Lead, Offer, Order, Sales Invoice, Credit
-Note, Bank Transaction).
+A full-stack salary management application built with **FastAPI, PostgreSQL, SQLAlchemy, Alembic, React, TypeScript, and Material UI**.
 
-See the accompanying design doc for the full architecture rationale. In short:
+## Architecture
 
-- `domain/` — the canonical model, zero vendor knowledge.
-- `mapping/` — the mapping table as data (`seed_rules.yaml`) + predicates
-  for conditional rows (e.g. offer value vs. related invoice value).
-- `adapters/` — one subpackage per external system; only place vendor
-  field names are known.
-- `engine/` — `resolve_state()`, the seam that turns a normalized event
-  into a finban state + rule id.
-- `persistence/` — idempotent writes, current-state table, full audit
-  trail (`state_change`).
-- `api/` — query endpoints for current state and history.
-
-## Local development
-
-```bash
-docker compose up --build
+```text
+React + TypeScript
+        ↓
+Axios / TanStack Query
+        ↓
+FastAPI REST API
+        ↓
+Service Layer
+        ↓
+Repository Layer
+        ↓
+SQLAlchemy
+        ↓
+PostgreSQL
 ```
 
-Then in another shell, run migrations and seed data:
+## Features
 
-```bash
-docker compose exec app alembic upgrade head
-docker compose exec app python scripts/seed_mapping_table.py
+### Backend
+
+* Employee management
+* Employee search and pagination
+* Salary record management
+* Add, update, and delete salary records
+* Salary history
+* Salary analytics
+* Input validation
+* Standardized API error responses
+* Global exception handling
+* Request ID tracking
+* Application logging
+* Health and readiness endpoints
+* PostgreSQL connection pooling
+* Environment-based configuration
+* CORS configuration
+* Security response headers
+* Graceful application shutdown
+* Database migrations with Alembic
+* Employee seed script
+* Automated tests
+* Ruff linting
+* mypy type checking
+
+### Frontend
+
+* Dashboard
+* Employee listing
+* Employee search
+* Employee pagination
+* Employee details
+* Add employee
+* Salary history
+* Add salary
+* Edit salary
+* Delete salary
+* Salary validation
+* Salary analytics
+* Loading states
+* Error states
+* Empty states
+* Responsive Material UI interface
+
+## Technology Stack
+
+### Backend
+
+* Python 3.13
+* FastAPI
+* SQLAlchemy
+* PostgreSQL
+* Alembic
+* Pydantic
+* pytest
+* Ruff
+* mypy
+
+### Frontend
+
+* React
+* TypeScript
+* Vite
+* React Router
+* TanStack Query
+* Axios
+* Material UI
+* React Hook Form
+* Zod
+
+## Project Structure
+
+```text
+salary-management/
+│
+├── backend/
+│   ├── app/
+│   │   ├── api/
+│   │   ├── core/
+│   │   ├── db/
+│   │   ├── repositories/
+│   │   ├── schemas/
+│   │   └── services/
+│   ├── alembic/
+│   ├── Scripts/
+│   ├── tests/
+│   ├── .env.example
+│   ├── .gitignore
+│   ├── pyproject.toml
+│   └── README.md
+│
+├── frontend/
+│   ├── src/
+│   ├── public/
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── tsconfig.json
+│   └── vite.config.ts
+│
+└── .gitignore
 ```
 
-API available at `http://localhost:8000`, docs at `/docs`.
+## Backend Setup
 
-## Running tests
+Go to the backend directory:
 
-```bash
+```powershell
+cd backend
+```
+
+Create a virtual environment:
+
+```powershell
+python -m venv .venv
+```
+
+Activate it:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+Install dependencies:
+
+```powershell
 pip install -e ".[dev]"
-pytest tests/unit tests/integration tests/contract tests/snapshot -v
 ```
 
-Run the canary check separately (not part of CI) against a real sandbox:
+Create your environment file:
 
-```bash
-python scripts/canary_check.py
+```powershell
+Copy-Item .env.example .env
 ```
 
-## Adding a new external system
+Update `.env` with your PostgreSQL credentials.
 
-1. Add a subpackage under `adapters/` implementing `BaseAdapter`.
-2. Add rows to a new mapping file (or extend `seed_rules.yaml`) — no
-   changes needed in `engine/` or `domain/`.
-3. Add contract tests with recorded fixtures for the new adapter.
-4. Add a fallback row for every `(system, type)` pair so nothing is
-   silently dropped — the CI completeness check enforces this.
+Run database migrations:
 
-## Adding a new conditional mapping rule
+```powershell
+alembic upgrade head
+```
 
-1. Write the predicate as a pure function in `mapping/predicates.py`.
-2. Register it in `mapping/registry.py`.
-3. Reference it by name in a `seed_rules.yaml` row.
-4. Add unit tests for every branch in `tests/unit/test_predicates.py`
-   and a resolution test in `tests/unit/test_resolver.py`.
+Start the API:
+
+```powershell
+uvicorn app.main:app --reload
+```
+
+API:
+
+```text
+http://127.0.0.1:8000
+```
+
+Swagger:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+ReDoc:
+
+```text
+http://127.0.0.1:8000/redoc
+```
+
+Health check:
+
+```text
+http://127.0.0.1:8000/health
+```
+
+Readiness check:
+
+```text
+http://127.0.0.1:8000/ready
+```
+
+## Running Backend Tests
+
+From the `backend` directory:
+
+```powershell
+pytest
+```
+
+Lint:
+
+```powershell
+ruff check .
+```
+
+Type checking:
+
+```powershell
+mypy app
+```
+
+## Seed Employees
+
+The project includes a seed script for generating employee data.
+
+```powershell
+python Scripts/seed_employees.py
+```
+
+Do not run the seed script repeatedly against the same database unless additional seed data is intended.
+
+## Frontend Setup
+
+Open another terminal:
+
+```powershell
+cd frontend
+```
+
+Install dependencies:
+
+```powershell
+npm install
+```
+
+Start the development server:
+
+```powershell
+npm run dev
+```
+
+The frontend normally runs at:
+
+```text
+http://localhost:5173
+```
+
+## Production Build
+
+From the frontend directory:
+
+```powershell
+npm run build
+```
+
+Preview the production build:
+
+```powershell
+npm run preview
+```
+
+## API Endpoints
+
+### Employees
+
+```text
+POST   /api/v1/employees
+GET    /api/v1/employees
+GET    /api/v1/employees/{id}
+PATCH  /api/v1/employees/{id}
+```
+
+### Salaries
+
+```text
+POST   /api/v1/employees/{employee_id}/salaries
+GET    /api/v1/employees/{employee_id}/salaries
+GET    /api/v1/employees/{employee_id}/salaries/latest
+GET    /api/v1/salaries/{salary_id}
+PUT    /api/v1/salaries/{salary_id}
+DELETE /api/v1/salaries/{salary_id}
+```
+
+### Analytics
+
+```text
+GET /api/v1/analytics
+```
+
+## Configuration
+
+Sensitive configuration is stored in `.env` and is intentionally excluded from Git.
+
+Use:
+
+```text
+backend/.env.example
+```
+
+as the template for local configuration.
+
+Never commit:
+
+```text
+.env
+.env.*
+```
+
+except for the provided:
+
+```text
+.env.example
+```
+
+## Development Principles
+
+The backend follows a layered architecture:
+
+```text
+Route
+  ↓
+Service
+  ↓
+Repository
+  ↓
+SQLAlchemy
+  ↓
+PostgreSQL
+
+
+Business logic is kept in the service layer, database access is handled by repositories, and API routes are responsible for HTTP-level concerns.
+
+## Status
+
+The project includes:
+
+* Backend API implementation
+* PostgreSQL persistence
+* Database migrations
+* Employee management
+* Salary management
+* Analytics
+* Validation and error handling
+* Logging
+* Automated backend tests
+* Static analysis
+* Frontend application
+* Production frontend build
+* Production-readiness configuration

@@ -1,21 +1,21 @@
 """create employee and salary tables
 
 Revision ID: 82e6c8c36049
-Revises: 
+Revises:
 Create Date: 2026-09-05 13:20:45.780415
 
 """
-from typing import Sequence, Union
+from collections.abc import Sequence
 
-from alembic import op
 import sqlalchemy as sa
 
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision: str = '82e6c8c36049'
-down_revision: Union[str, Sequence[str], None] = None
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+down_revision: str | Sequence[str] | None = None
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
@@ -53,9 +53,22 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['employee_id'], ['employees.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_salary_records_currency'), 'salary_records', ['currency'], unique=False)
-    op.create_index(op.f('ix_salary_records_employee_id'), 'salary_records', ['employee_id'], unique=False)
-    # ### end Alembic commands ###
+
+    op.create_index(
+       op.f("ix_salary_records_currency"),
+       "salary_records",
+       ["currency"],
+       unique=False,
+    )
+
+    op.create_index(
+          op.f("ix_salary_records_employee_id"),
+          "salary_records",
+          ["employee_id"],
+          unique=False,
+    )
+
+    #### end Alembic commands ###
 
 
 def downgrade() -> None:

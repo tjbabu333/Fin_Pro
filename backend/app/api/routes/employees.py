@@ -1,13 +1,15 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
-from app.db.session import get_db
-from app.schemas.employee import (EmployeeCreate, EmployeeUpdate, EmployeeResponse)
-from app.services.employee_service import EmployeeService
-
 from app.core.exceptions import EmployeeNotFoundError
-
-
+from app.db.session import get_db
+from app.schemas.employee import (
+    EmployeeCreate,
+    EmployeeListResponse,
+    EmployeeResponse,
+    EmployeeUpdate,
+)
+from app.services.employee_service import EmployeeService
 
 router = APIRouter(
     prefix="/api/v1/employees",
@@ -24,13 +26,26 @@ def create_employee(
     return service.create_employee(employee)
 
 
-@router.get("", response_model=list[EmployeeResponse])
-def get_employee(
+@router.get("", response_model=EmployeeListResponse)
+def get_employees(
+     page: int = Query(1, ge=1),
+     page_size: int = Query(20, ge=1, le=100),
+     search: str | None = Query(None),
     db: Session = Depends(get_db)
 ):
     service = EmployeeService(db)
-    return service.get_employees()
 
+    employees, total = service.get_employees(
+          page=page,
+          page_size=page_size,
+          search=search,
+    )
+    return {
+          "items": employees,
+          "page" : page,
+          "page_size": page_size,
+          "total": total,
+    }
 
 @router.get("/{employee_id}", response_model=EmployeeResponse)
 def get_employee(

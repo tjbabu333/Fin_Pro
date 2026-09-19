@@ -1,14 +1,14 @@
+import logging
+
 from sqlalchemy.orm import Session
 
+from app.core.exceptions import (
+    EmployeeAlreadyExistsError,
+    EmployeeNotFoundError,
+)
 from app.db.models import Employee
 from app.repositories.employee_repository import EmployeeRepository
 from app.schemas.employee import EmployeeCreate, EmployeeUpdate
-
-from app.core.exceptions import EmployeeNotFoundError
-
-from app.core.exceptions import EmployeeAlreadyExistsError
-
-import logging
 
 logger = logging.getLogger("app.employee")
 
@@ -58,8 +58,17 @@ class EmployeeService:
 
         return self.repository.create(employee)
 
-    def get_employees(self):
-        return self.repository.get_all()
+    def get_employees(
+           self,
+           page: int = 1,
+           page_size: int = 20,
+           search: str | None = None,
+    ):
+        return self.repository.get_all(
+                 page=page,
+                 page_size=page_size,
+                 search=search,
+        )
 
     def get_employee(self, employee_id: int):
         return self.repository.get_by_id(employee_id)
@@ -74,8 +83,6 @@ class EmployeeService:
         if not employee:
             raise EmployeeNotFoundError()
         
-        return employee
-
         if data.full_name is not None:
             employee.full_name = data.full_name
 

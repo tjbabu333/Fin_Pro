@@ -4,20 +4,20 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    app_name: str = "Salary Management API"
-    app_env: str = "development"
-    debug: bool = False
-
-    database_url: str
-
+    database_url: str = ""
     cors_origins: str = "http://localhost:5173"
+    environment: str = "development"
+    max_request_size_mb: int = 2
 
-    log_level: str = "INFO"
+    db_pool_size: int = 5
+    db_max_overflow: int = 10
+    db_pool_timeout: int = 30
+    db_pool_recycle: int = 300
 
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
-        case_sensitive=False,
+        extra="ignore",
     )
 
 

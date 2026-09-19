@@ -1,7 +1,15 @@
 from datetime import date, datetime
 from decimal import Decimal
 
-from sqlalchemy import Date, DateTime, ForeignKey, Numeric, String, func
+from sqlalchemy import (
+    Date,
+    DateTime,
+    ForeignKey,
+    Index,
+    Numeric,
+    String,
+    func,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
@@ -9,6 +17,14 @@ from app.db.base import Base
 
 class SalaryRecord(Base):
     __tablename__ = "salary_records"
+
+    __table_args__ = (
+          Index(
+                  "ix_salary_records_employee_effective_from",
+                  "employee_id",
+                  "effective_from",
+          ),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
 

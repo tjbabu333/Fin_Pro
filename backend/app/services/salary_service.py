@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 
+from app.core.exceptions import InvalidSalaryPeriodError
 from app.db.models import Employee, SalaryRecord
 from app.repositories.salary_repository import SalaryRepository
 from app.schemas.salary import SalaryCreate, SalaryUpdate
@@ -32,7 +33,7 @@ class SalaryService:
             data.effective_to is not None
             and data.effective_to < data.effective_from
         ):
-            raise ValueError(
+            raise InvalidSalaryPeriodError(
                 "effective_to cannot be before effective_from"
             )
 

@@ -1,20 +1,17 @@
-# app/db/database.py
-
-import os
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from app.core.config import get_settings
 
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql://salary_user:TJbabu1234@localhost:5432/salary_db",
-)
+settings = get_settings()
 
 engine = create_engine(
-    DATABASE_URL,
+    settings.database_url,
+    pool_size=settings.db_pool_size,
+    max_overflow=settings.db_max_overflow,
+    pool_timeout=settings.db_pool_timeout,
+    pool_recycle=settings.db_pool_recycle,
     pool_pre_ping=True,
-    pool_recycle=300,
 )
 
 SessionLocal = sessionmaker(

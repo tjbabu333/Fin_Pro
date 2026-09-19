@@ -2,7 +2,6 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
-
 EmployeeStatus = Literal["ACTIVE", "INACTIVE"]
 
 
@@ -17,11 +16,27 @@ class EmployeeCreate(BaseModel):
 
 
 class EmployeeUpdate(BaseModel):
-    full_name: str | None = Field(default=None, min_length=1, max_length=150)
+    full_name: str | None = Field(
+        default=None,
+        min_length=1,
+        max_length=150,
+    )
     email: EmailStr | None = None
-    country: str | None = Field(default=None, min_length=1, max_length=100)
-    department: str | None = Field(default=None, min_length=1, max_length=100)
-    job_title: str | None = Field(default=None, min_length=1, max_length=150)
+    country: str | None = Field(
+        default=None,
+        min_length=1,
+        max_length=100,
+    )
+    department: str | None = Field(
+        default=None,
+        min_length=1,
+        max_length=100,
+    )
+    job_title: str | None = Field(
+        default=None,
+        min_length=1,
+        max_length=150,
+    )
     status: EmployeeStatus | None = None
 
 
@@ -36,3 +51,10 @@ class EmployeeResponse(BaseModel):
     department: str
     job_title: str
     status: EmployeeStatus
+
+
+class EmployeeListResponse(BaseModel):
+    items: list[EmployeeResponse]
+    page: int = Field(ge=1)
+    page_size: int = Field(ge=1)
+    total: int = Field(ge=0)
