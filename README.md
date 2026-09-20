@@ -1,176 +1,312 @@
 # Salary Management System
 
-A full-stack salary management application built with **FastAPI, PostgreSQL, SQLAlchemy, Alembic, React, TypeScript, and Material UI**.
+A full-stack Salary Management System built with **React + TypeScript**, **FastAPI**, and **PostgreSQL**.
 
-## Architecture
+The application provides employee management, salary management, salary history, validation, search, pagination, analytics, centralized error handling, logging, database migrations, and automated testing.
+
+---
+
+## 📌 Project Overview
+
+The Salary Management System is designed to demonstrate a production-oriented full-stack application with a clean separation between frontend, backend, business logic, and database layers.
+
+### Core Architecture
 
 ```text
-React + TypeScript
-        ↓
-Axios / TanStack Query
-        ↓
-FastAPI REST API
-        ↓
-Service Layer
-        ↓
-Repository Layer
-        ↓
-SQLAlchemy
-        ↓
-PostgreSQL
+┌─────────────────────────────┐
+│       React Frontend        │
+│     TypeScript + MUI        │
+└──────────────┬──────────────┘
+               │
+               │ REST API
+               ▼
+┌─────────────────────────────┐
+│       FastAPI Backend       │
+│          API Routes         │
+└──────────────┬──────────────┘
+               │
+               ▼
+┌─────────────────────────────┐
+│       Service Layer         │
+│       Business Logic        │
+└──────────────┬──────────────┘
+               │
+               ▼
+┌─────────────────────────────┐
+│      Repository Layer       │
+│      Database Operations    │
+└──────────────┬──────────────┘
+               │
+               ▼
+┌─────────────────────────────┐
+│        PostgreSQL           │
+└─────────────────────────────┘
 ```
 
-## Features
+---
 
-### Backend
+## 🚀 Features
 
-* Employee management
-* Employee search and pagination
-* Salary record management
-* Add, update, and delete salary records
-* Salary history
-* Salary analytics
-* Input validation
-* Standardized API error responses
-* Global exception handling
-* Request ID tracking
+### Employee Management
+
+* Create employees
+* View employee details
+* Update employee information
+* Search employees
+* Paginate employee records
+* Employee validation
+* Duplicate employee handling
+
+### Salary Management
+
+* Add salary records
+* View salary history
+* Edit salary records
+* Delete salary records
+* Salary validation
+* Salary period validation
+* Currency validation
+
+### Analytics
+
+* Salary-related analytics
+* Aggregated employee/salary information
+* Dashboard reporting
+
+### Reliability & Quality
+
+* Health endpoint
+* Readiness endpoint
+* Centralized exception handling
+* Structured error responses
 * Application logging
-* Health and readiness endpoints
-* PostgreSQL connection pooling
+* Request IDs
+* Database connection pooling
 * Environment-based configuration
 * CORS configuration
-* Security response headers
+* Security headers
 * Graceful application shutdown
-* Database migrations with Alembic
-* Employee seed script
-* Automated tests
-* Ruff linting
-* mypy type checking
 
-### Frontend
+### Development Quality
 
-* Dashboard
-* Employee listing
-* Employee search
-* Employee pagination
-* Employee details
-* Add employee
-* Salary history
-* Add salary
-* Edit salary
-* Delete salary
-* Salary validation
-* Salary analytics
-* Loading states
-* Error states
-* Empty states
-* Responsive Material UI interface
+* Automated API tests
+* Pytest
+* HTTPX
+* Ruff
+* mypy
+* Alembic migrations
+* TypeScript
+* Zod validation
+* React Hook Form
 
-## Technology Stack
+---
 
-### Backend
+# 🛠️ Technology Stack
 
-* Python 3.13
-* FastAPI
-* SQLAlchemy
+## Frontend
+
+| Technology      | Purpose                 |
+| --------------- | ----------------------- |
+| React           | UI development          |
+| TypeScript      | Type safety             |
+| Vite            | Frontend build tooling  |
+| React Router    | Application routing     |
+| Material UI     | UI components           |
+| TanStack Query  | Server-state management |
+| Axios           | HTTP client             |
+| React Hook Form | Form management         |
+| Zod             | Form validation         |
+
+## Backend
+
+| Technology        | Purpose                  |
+| ----------------- | ------------------------ |
+| Python 3.13       | Backend language         |
+| FastAPI           | REST API framework       |
+| Uvicorn           | ASGI server              |
+| SQLAlchemy        | ORM/database access      |
+| Alembic           | Database migrations      |
+| Pydantic          | Data validation          |
+| pydantic-settings | Configuration management |
+
+## Database
+
 * PostgreSQL
-* Alembic
-* Pydantic
-* pytest
+
+## Testing & Code Quality
+
+* Pytest
+* HTTPX
 * Ruff
 * mypy
 
-### Frontend
+## Version Control
 
-* React
-* TypeScript
-* Vite
-* React Router
-* TanStack Query
-* Axios
-* Material UI
-* React Hook Form
-* Zod
+* Git
+* GitHub
 
-## Project Structure
+---
+
+# 📁 Project Structure
 
 ```text
 salary-management/
 │
 ├── backend/
 │   ├── app/
-│   │   ├── api/
 │   │   ├── core/
 │   │   ├── db/
+│   │   ├── models/
 │   │   ├── repositories/
-│   │   ├── schemas/
-│   │   └── services/
+│   │   ├── services/
+│   │   ├── routes/
+│   │   └── main.py
+│   │
 │   ├── alembic/
-│   ├── Scripts/
 │   ├── tests/
 │   ├── .env.example
-│   ├── .gitignore
-│   ├── pyproject.toml
-│   └── README.md
+│   ├── alembic.ini
+│   └── pyproject.toml
 │
 ├── frontend/
 │   ├── src/
-│   ├── public/
+│   │   ├── api/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── layouts/
+│   │   ├── pages/
+│   │   ├── routes/
+│   │   └── types/
+│   │
 │   ├── package.json
-│   ├── package-lock.json
-│   ├── tsconfig.json
 │   └── vite.config.ts
 │
-└── .gitignore
+├── docs/
+│   └── PROJECT_DOCUMENTATION.md
+│
+├── .gitignore
+└── README.md
 ```
 
-## Backend Setup
+---
 
-Go to the backend directory:
+# 🔌 API Overview
 
-```powershell
+## Health & Readiness
+
+```http
+GET /health
+GET /ready
+```
+
+## Employees
+
+```http
+POST  /api/v1/employees
+GET   /api/v1/employees
+GET   /api/v1/employees/{employee_id}
+PATCH /api/v1/employees/{employee_id}
+```
+
+## Salaries
+
+```http
+POST   /api/v1/employees/{employee_id}/salaries
+GET    /api/v1/employees/{employee_id}/salaries
+GET    /api/v1/salaries/{salary_id}
+PUT    /api/v1/salaries/{salary_id}
+DELETE /api/v1/salaries/{salary_id}
+```
+
+## Analytics
+
+```http
+GET /api/v1/analytics
+```
+
+Interactive API documentation is available through FastAPI Swagger:
+
+```text
+/docs
+```
+
+---
+
+# 🗄️ Database
+
+The application uses **PostgreSQL** with **SQLAlchemy**.
+
+Database schema changes are managed using **Alembic**.
+
+Run the latest migrations:
+
+```bash
+alembic upgrade head
+```
+
+Create a new migration:
+
+```bash
+alembic revision --autogenerate -m "description"
+```
+
+---
+
+# ⚙️ Backend Setup
+
+Navigate to the backend:
+
+```bash
 cd backend
 ```
 
 Create a virtual environment:
 
-```powershell
+```bash
 python -m venv .venv
 ```
 
-Activate it:
+Activate it on Windows:
 
-```powershell
-.\.venv\Scripts\Activate.ps1
+```cmd
+.venv\Scripts\activate
 ```
 
 Install dependencies:
 
-```powershell
-pip install -e ".[dev]"
+```bash
+pip install -e .
 ```
 
-Create your environment file:
+Configure environment variables using:
 
-```powershell
-Copy-Item .env.example .env
+```text
+backend/.env.example
 ```
 
-Update `.env` with your PostgreSQL credentials.
+Create your local `.env` file and configure the database connection.
 
-Run database migrations:
+Example:
 
-```powershell
+```env
+DATABASE_URL=postgresql://username:password@localhost:5432/salary_db
+CORS_ORIGINS=http://localhost:5173
+ENVIRONMENT=development
+```
+
+Run migrations:
+
+```bash
 alembic upgrade head
 ```
 
-Start the API:
+Start the backend:
 
-```powershell
+```bash
 uvicorn app.main:app --reload
 ```
 
-API:
+Backend:
 
 ```text
 http://127.0.0.1:8000
@@ -182,179 +318,323 @@ Swagger:
 http://127.0.0.1:8000/docs
 ```
 
-ReDoc:
+---
 
-```text
-http://127.0.0.1:8000/redoc
-```
+# 💻 Frontend Setup
 
-Health check:
+Navigate to the frontend:
 
-```text
-http://127.0.0.1:8000/health
-```
-
-Readiness check:
-
-```text
-http://127.0.0.1:8000/ready
-```
-
-## Running Backend Tests
-
-From the `backend` directory:
-
-```powershell
-pytest
-```
-
-Lint:
-
-```powershell
-ruff check .
-```
-
-Type checking:
-
-```powershell
-mypy app
-```
-
-## Seed Employees
-
-The project includes a seed script for generating employee data.
-
-```powershell
-python Scripts/seed_employees.py
-```
-
-Do not run the seed script repeatedly against the same database unless additional seed data is intended.
-
-## Frontend Setup
-
-Open another terminal:
-
-```powershell
+```bash
 cd frontend
 ```
 
 Install dependencies:
 
-```powershell
+```bash
 npm install
 ```
 
+Configure the backend API URL using the frontend environment configuration.
+
 Start the development server:
 
-```powershell
+```bash
 npm run dev
 ```
 
-The frontend normally runs at:
+The Vite development server will provide the frontend URL.
 
-```text
-http://localhost:5173
+---
+
+# 🧪 Testing
+
+## Backend Tests
+
+From the `backend` directory:
+
+```bash
+pytest
 ```
 
-## Production Build
+The project includes tests for:
 
-From the frontend directory:
+* Employee APIs
+* Salary APIs
+* Validation
+* Duplicate records
+* Error handling
+* Health/readiness
+* Analytics
+* Database-related behavior
 
-```powershell
+## Linting
+
+```bash
+ruff check .
+```
+
+## Type Checking
+
+```bash
+mypy app
+```
+
+---
+
+# 🏗️ Production Build
+
+## Frontend
+
+Create the production build:
+
+```bash
 npm run build
 ```
 
-Preview the production build:
-
-```powershell
-npm run preview
-```
-
-## API Endpoints
-
-### Employees
+Production files are generated in:
 
 ```text
-POST   /api/v1/employees
-GET    /api/v1/employees
-GET    /api/v1/employees/{id}
-PATCH  /api/v1/employees/{id}
+frontend/dist
 ```
 
-### Salaries
+## Backend
+
+Production server:
+
+```bash
+uvicorn app.main:app --host 0.0.0.0 --port $PORT
+```
+
+Apply database migrations:
+
+```bash
+alembic upgrade head
+```
+
+---
+
+# 🔐 Environment & Security
+
+Sensitive configuration must **not** be committed to GitHub.
+
+The repository uses:
 
 ```text
-POST   /api/v1/employees/{employee_id}/salaries
-GET    /api/v1/employees/{employee_id}/salaries
-GET    /api/v1/employees/{employee_id}/salaries/latest
-GET    /api/v1/salaries/{salary_id}
-PUT    /api/v1/salaries/{salary_id}
-DELETE /api/v1/salaries/{salary_id}
+.env
 ```
 
-### Analytics
+for local/private environment configuration.
 
-```text
-GET /api/v1/analytics
-```
-
-## Configuration
-
-Sensitive configuration is stored in `.env` and is intentionally excluded from Git.
-
-Use:
+A safe template is provided through:
 
 ```text
 backend/.env.example
 ```
 
-as the template for local configuration.
+The `.gitignore` excludes environment files and other local configuration.
 
-Never commit:
+Production secrets should be configured through the deployment platform's environment-variable management.
 
-```text
-.env
-.env.*
+---
+
+# ❤️ Health Checks
+
+### Health
+
+```http
+GET /health
 ```
 
-except for the provided:
+Example:
 
-```text
-.env.example
+```json
+{
+  "status": "healthy"
+}
 ```
 
-## Development Principles
+### Readiness
 
-The backend follows a layered architecture:
+```http
+GET /ready
+```
+
+The readiness endpoint verifies that the application and required dependencies are ready to serve requests.
+
+---
+
+# 📊 Application Flow
+
+### Create Employee
 
 ```text
-Route
-  ↓
+React Form
+    ↓
+Zod Validation
+    ↓
+TanStack Query
+    ↓
+Axios
+    ↓
+FastAPI
+    ↓
 Service
-  ↓
+    ↓
 Repository
-  ↓
-SQLAlchemy
-  ↓
+    ↓
 PostgreSQL
+```
 
+### Create/Edit Salary
 
-Business logic is kept in the service layer, database access is handled by repositories, and API routes are responsible for HTTP-level concerns.
+```text
+Salary Form
+    ↓
+Client Validation
+    ↓
+FastAPI Validation
+    ↓
+Business Rules
+    ↓
+Database
+    ↓
+Updated Salary History
+```
 
-## Status
+---
 
-The project includes:
+# ✅ Verification Status
 
-* Backend API implementation
-* PostgreSQL persistence
-* Database migrations
-* Employee management
-* Salary management
-* Analytics
-* Validation and error handling
+The application has been verified for the following functionality:
+
+### Backend
+
+* [x] Health endpoint
+* [x] Readiness endpoint
+* [x] Employee APIs
+* [x] Salary APIs
+* [x] Analytics API
+* [x] Validation
+* [x] Error handling
+* [x] Logging
+* [x] Database migrations
+* [x] PostgreSQL integration
+* [x] Automated tests
+* [x] Ruff
+* [x] mypy
+
+### Frontend
+
+* [x] Dashboard
+* [x] Employee listing
+* [x] Employee search
+* [x] Pagination
+* [x] Add Employee
+* [x] Employee Details
+* [x] Salary History
+* [x] Add Salary
+* [x] Salary validation
+* [x] Edit Salary
+* [x] Delete Salary
+* [x] Analytics
+* [x] Loading states
+* [x] Error states
+* [x] Empty states
+* [x] Production build
+
+---
+
+# 📚 Documentation
+
+Detailed technical documentation is available here:
+
+```text
+docs/PROJECT_DOCUMENTATION.md
+```
+
+It contains:
+
+* Detailed architecture
+* Database design
+* API documentation
+* Validation rules
+* Error handling
+* Testing
+* Security
 * Logging
-* Automated backend tests
-* Static analysis
-* Frontend application
-* Production frontend build
-* Production-readiness configuration
+* Performance considerations
+* Deployment
+* Design decisions
+* Future improvements
+
+---
+
+# 🚀 Deployment
+
+The application can be deployed as separate frontend, backend, and database services.
+
+```text
+                  GitHub
+                    │
+          ┌─────────┴─────────┐
+          │                   │
+          ▼                   ▼
+      Frontend             Backend
+       Hosting             Hosting
+                              │
+                              ▼
+                         PostgreSQL
+```
+
+Production deployment should use:
+
+* HTTPS
+* Production environment variables
+* Managed PostgreSQL
+* Database migrations
+* Production CORS configuration
+* Secure secret management
+
+---
+
+# 🔮 Future Improvements
+
+Potential future enhancements include:
+
+* Authentication
+* Role-based authorization
+* Audit logging
+* CSV/Excel export
+* Advanced reporting
+* CI/CD automation
+* Cloud monitoring
+* API rate limiting
+* Background processing
+* Expanded frontend automated tests
+* Containerized deployment
+
+---
+
+# 👨‍💻 Project Purpose
+
+This project demonstrates practical full-stack development using modern technologies and software engineering practices.
+
+It focuses on:
+
+* Clean architecture
+* Maintainable code
+* REST API design
+* Database design
+* Business validation
+* Error handling
+* Automated testing
+* Type safety
+* Production configuration
+* Frontend/backend integration
+* Git-based development workflow
+
+---
+
+## License
+
+This project is intended for demonstration and assessment purposes.
