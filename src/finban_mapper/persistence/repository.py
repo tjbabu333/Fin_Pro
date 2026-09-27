@@ -10,7 +10,7 @@ resolving a state. It is the enforcement point for:
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import UTC, datetime
 
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
@@ -40,7 +40,7 @@ def apply_state_change(
         system=event.system,
         external_id=event.external_id,
         updated_at=event.updated_at,
-        processed_at=datetime.utcnow(),
+        processed_at=datetime.now(UTC),
     )
     session.add(processed)
     try:
@@ -83,7 +83,7 @@ def apply_state_change(
             source_system=event.system,
             source_event_id=event.external_id,
             rule_id=rule_id,
-            occurred_at=datetime.utcnow(),
+            occurred_at=datetime.now(UTC),
         )
     )
     session.commit()

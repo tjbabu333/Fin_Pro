@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -44,6 +44,6 @@ def make_event(
         type=type,
         external_id=external_id,
         state=state,
-        updated_at=datetime(2026, 1, 1),
+        updated_at=datetime(2026, 1, 1, tzinfo=UTC),
         data=data or {},
     )

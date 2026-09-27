@@ -4,10 +4,10 @@ These are derived purely from finban's own vocabulary — nothing here
 should ever import from `adapters/` or know that Lexware Office exists.
 """
 
-from enum import Enum
+from enum import StrEnum
 
 
-class LeadState(str, Enum):
+class LeadState(StrEnum):
     POTENTIAL = "potential"
     WON = "won"
     LOST = "lost"
@@ -15,7 +15,7 @@ class LeadState(str, Enum):
     ARCHIVED = "archived"
 
 
-class OfferState(str, Enum):
+class OfferState(StrEnum):
     DRAFT = "draft"
     SENT = "sent"
     ACCEPTED = "accepted"
@@ -25,7 +25,7 @@ class OfferState(str, Enum):
     REJECTED = "rejected"
 
 
-class OrderState(str, Enum):
+class OrderState(StrEnum):
     DRAFT = "draft"
     CONFIRMED = "confirmed"
     PARTIALLY_CALCULATED = "partially_calculated"
@@ -33,7 +33,7 @@ class OrderState(str, Enum):
     ARCHIVED = "archived"
 
 
-class SalesInvoiceState(str, Enum):
+class SalesInvoiceState(StrEnum):
     DRAFT = "draft"
     OPEN = "open"
     SENT = "sent"
@@ -47,7 +47,7 @@ class SalesInvoiceState(str, Enum):
     UNDEFINED = "undefined"
 
 
-class CreditNoteState(str, Enum):
+class CreditNoteState(StrEnum):
     OPEN = "open"
     PAID = "paid"
     PARTIALLY_PAID = "partially_paid"
@@ -55,12 +55,12 @@ class CreditNoteState(str, Enum):
     ARCHIVED = "archived"
 
 
-class PurchaseInvoiceState(str, Enum):
+class PurchaseInvoiceState(StrEnum):
     DRAFT_OPEN = "draft_open"
     PAID = "paid"
     CANCELED = "canceled"
 
 
-class BankTransactionState(str, Enum):
+class BankTransactionState(StrEnum):
     BOOKED = "booked"
     PENDING = "pending"

@@ -8,7 +8,6 @@ an ExternalEvent into a state on one of these entities.
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -81,7 +80,7 @@ class StateChange(BaseModel):
 
     entity_type: str
     entity_id: str
-    old_state: Optional[str] = None
+    old_state: str | None = None
     new_state: str
     source_system: str
     source_event_id: str
