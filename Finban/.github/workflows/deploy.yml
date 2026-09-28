@@ -1,0 +1,49 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.vars.outputs.sha_short }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Build image
+        run: docker build -t finban-mapper:${{ steps.vars.outputs.sha_short }} .
+
+      - name: Push image
+        run: |
+          echo "Push finban-mapper:${{ steps.vars.outputs.sha_short }} to your registry here"
+          # e.g. docker push $REGISTRY/finban-mapper:${{ steps.vars.outputs.sha_short }}
+
+  deploy-staging:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Run migrations against staging
+        run: echo "alembic upgrade head (against staging DATABASE_URL)"
+
+      - name: Deploy to staging
+        run: echo "Deploy image ${{ needs.build-and-push.outputs.image_tag }} to staging ECS/k8s"
+
+      - name: Run contract tests against Lexware Office sandbox
+        run: echo "pytest tests/contract --sandbox (optional live sandbox pass)"
+
+  promote-production:
+    needs: [build-and-push, deploy-staging]
+    runs-on: ubuntu-latest
+    environment: production  # configure required reviewers on this environment for the manual approval gate
+    steps:
+      - name: Run migrations against production
+        run: echo "alembic upgrade head (against production DATABASE_URL)"
+
+      - name: Promote image to production
+        run: echo "Deploy image ${{ needs.build-and-push.outputs.image_tag }} to production ECS/k8s"

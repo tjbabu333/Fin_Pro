@@ -1,0 +1,168 @@
+# The source spreadsheet, encoded as data. Add a new vendor by adding rows
+# here — the engine (engine/resolver.py) never needs to change.
+#
+# A row with no `predicate` is a direct 1:1 lookup. A row with a predicate
+# is only applied when that predicate returns True for the incoming event.
+# Every (external_system, external_type, external_state) group should end
+# in a `is_fallback: true` row so nothing is silently dropped.
+
+rules:
+  # --- Offer / quotation ---
+  - id: r-offer-001
+    external_system: lexware_office
+    external_type: quotation
+    external_state: draft
+    finban_entity_type: offer
+    finban_state: draft
+
+  - id: r-offer-002
+    external_system: lexware_office
+    external_type: quotation
+    external_state: open
+    finban_entity_type: offer
+    finban_state: sent
+
+  - id: r-offer-003
+    external_system: lexware_office
+    external_type: quotation
+    external_state: accepted
+    finban_entity_type: offer
+    finban_state: accepted
+
+  - id: r-offer-004
+    external_system: lexware_office
+    external_type: quotation
+    external_state: quotation
+    predicate: offer_related_invoice_below_value
+    finban_entity_type: offer
+    finban_state: partially_calculated
+
+  - id: r-offer-005
+    external_system: lexware_office
+    external_type: quotation
+    external_state: quotation
+    predicate: offer_related_invoice_at_or_above_value
+    finban_entity_type: offer
+    finban_state: calculated
+
+  - id: r-offer-006
+    external_system: lexware_office
+    external_type: quotation
+    external_state: rejected
+    finban_entity_type: offer
+    finban_state: rejected
+
+  - id: r-offer-fallback
+    external_system: lexware_office
+    external_type: quotation
+    external_state: "*"
+    is_fallback: true
+    finban_entity_type: offer
+    finban_state: undefined
+
+  # --- Order confirmation ---
+  - id: r-order-001
+    external_system: lexware_office
+    external_type: order_confirmation
+    external_state: draft
+    finban_entity_type: order
+    finban_state: draft
+
+  - id: r-order-002
+    external_system: lexware_office
+    external_type: order_confirmation
+    external_state: open
+    finban_entity_type: order
+    finban_state: confirmed
+
+  - id: r-order-003
+    external_system: lexware_office
+    external_type: order_confirmation
+    external_state: archived
+    predicate: order_archived_no_related_invoice
+    finban_entity_type: order
+    finban_state: archived
+
+  - id: r-order-004
+    external_system: lexware_office
+    external_type: order_confirmation
+    external_state: archived
+    predicate: order_archived_partially_invoiced
+    finban_entity_type: order
+    finban_state: partially_calculated
+
+  - id: r-order-005
+    external_system: lexware_office
+    external_type: order_confirmation
+    external_state: archived
+    predicate: order_archived_fully_invoiced
+    finban_entity_type: order
+    finban_state: calculated
+
+  - id: r-order-fallback
+    external_system: lexware_office
+    external_type: order_confirmation
+    external_state: "*"
+    is_fallback: true
+    finban_entity_type: order
+    finban_state: undefined
+
+  # --- Sales invoice ---
+  - id: r-inv-001
+    external_system: lexware_office
+    external_type: invoice
+    external_state: draft
+    finban_entity_type: sales_invoice
+    finban_state: draft
+
+  - id: r-inv-002
+    external_system: lexware_office
+    external_type: invoice
+    external_state: open
+    predicate: invoice_open_and_partially_paid
+    finban_entity_type: sales_invoice
+    finban_state: partially_paid
+
+  - id: r-inv-003
+    external_system: lexware_office
+    external_type: invoice
+    external_state: open
+    finban_entity_type: sales_invoice
+    finban_state: open
+
+  - id: r-inv-004
+    external_system: lexware_office
+    external_type: invoice
+    external_state: paid
+    finban_entity_type: sales_invoice
+    finban_state: paid
+
+  - id: r-inv-005
+    external_system: lexware_office
+    external_type: invoice
+    external_state: voided
+    finban_entity_type: sales_invoice
+    finban_state: canceled
+
+  - id: r-inv-fallback
+    external_system: lexware_office
+    external_type: invoice
+    external_state: "*"
+    is_fallback: true
+    finban_entity_type: sales_invoice
+    finban_state: undefined
+
+  # --- Bank transaction (flat 1:1, no predicates needed) ---
+  - id: r-bank-001
+    external_system: lexware_office
+    external_type: bank_transaction
+    external_state: booked
+    finban_entity_type: bank_transaction
+    finban_state: booked
+
+  - id: r-bank-002
+    external_system: lexware_office
+    external_type: bank_transaction
+    external_state: pending
+    finban_entity_type: bank_transaction
+    finban_state: pending
