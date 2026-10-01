@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="45" fill="#667eea"/>
+  <rect x="20" y="35" width="60" height="30" rx="5" fill="white"/>
+  <circle cx="30" cy="45" r="6" fill="#667eea"/>
+  <circle cx="70" cy="45" r="6" fill="#667eea"/>
+  <circle cx="50" cy="55" r="4" fill="#667eea"/>
+  <rect x="75" y="25" width="8" height="50" rx="4" fill="white"/>
+  <polygon points="83,35 95,30 95,40" fill="white"/>
+  <polygon points="83,50 95,45 95,55" fill="white"/>
+  <text x="50" y="85" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">🎬</text>
+</svg> 
